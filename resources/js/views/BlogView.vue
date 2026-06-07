@@ -45,7 +45,7 @@
 
                 <div v-else-if="!slug">
                     <SectionTitle title="All Posts" subtitle="Data engineering, cloud platforms, and more" />
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="blog-grid-2" :class="{ 'is-single': posts.length === 1 }">
                         <BlogCard v-for="post in posts" :key="post.id" :post="post" />
                     </div>
                 </div>

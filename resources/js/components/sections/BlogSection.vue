@@ -21,7 +21,10 @@
             </div>
 
             <template v-else-if="posts.length">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div
+                    class="blog-grid-3 mb-10"
+                    :class="{ 'is-single': posts.length === 1, 'is-pair': posts.length === 2 }"
+                >
                     <BlogCard v-for="post in posts" :key="post.id" :post="post" />
                 </div>
                 <div class="text-center">
