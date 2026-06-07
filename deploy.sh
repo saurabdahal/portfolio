@@ -18,7 +18,7 @@ echo "[1/6] Installing PHP dependencies..."
 composer install --no-dev --optimize-autoloader --no-scripts
 
 echo "[2/6] Clearing stale caches and rediscovering packages..."
-rm -f bootstrap/cache/packages.php bootstrap/cache/services.php
+sudo rm -f bootstrap/cache/packages.php bootstrap/cache/services.php
 php artisan optimize:clear
 php artisan package:discover --ansi
 
@@ -40,6 +40,8 @@ php artisan storage:link 2>/dev/null || true
 echo "Setting permissions..."
 sudo chown -R www-data:www-data $APP_DIR/storage $APP_DIR/bootstrap/cache
 sudo chmod -R 775 $APP_DIR/storage $APP_DIR/bootstrap/cache
+# Allow admin user to manage these dirs in future deploys
+sudo chmod g+s $APP_DIR/bootstrap/cache $APP_DIR/storage
 
 echo "====================================="
 echo " Deploy complete! Branch: $BRANCH"
