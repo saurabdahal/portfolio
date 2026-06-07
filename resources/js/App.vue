@@ -4,6 +4,8 @@
             <div class="w-8 h-8 border-2 border-[#484848] border-t-transparent rounded-full animate-spin"></div>
         </div>
 
+        <Maintenance v-else-if="maintenanceMode" :socials="socials" />
+
         <template v-else>
             <NavBar :initials="heroData.name || 'Portfolio'" :active-section="activeSection" />
             <Hero
@@ -51,8 +53,10 @@ import Portfolio from './components/sections/Portfolio.vue';
 import Services from './components/sections/Services.vue';
 import Contact from './components/sections/Contact.vue';
 import Footer from './components/sections/Footer.vue';
+import Maintenance from './components/sections/Maintenance.vue';
 
-const loading = ref(true);
+const loading          = ref(true);
+const maintenanceMode  = ref(false);
 const heroData    = ref({});
 const aboutData   = ref({});
 const skills      = ref([]);
@@ -66,6 +70,7 @@ const activeSection = ref('home');
 onMounted(async () => {
     try {
         const { data } = await axios.get('/api/portfolio');
+        maintenanceMode.value = data.maintenance_mode ?? false;
         heroData.value    = data.hero    ?? {};
         aboutData.value   = data.about   ?? {};
         skills.value      = data.skills  ?? [];

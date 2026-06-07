@@ -10,12 +10,15 @@ use App\Models\Project;
 use App\Models\Service;
 use App\Models\ContactInfo;
 use App\Models\Social;
+use App\Models\Setting;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/api/portfolio', function () {
+    $maintenance_mode = Setting::get('maintenance_mode', '0') === '1';
+
     $hero        = Hero::where('is_visible', true)->first();
     $about       = About::where('is_visible', true)->first();
     $skills      = Skill::where('is_visible', true)->orderBy('order')->get();
@@ -26,6 +29,7 @@ Route::get('/api/portfolio', function () {
     $socials     = Social::where('is_visible', true)->orderBy('order')->get();
 
     return response()->json(compact(
+        'maintenance_mode',
         'hero', 'about', 'skills', 'experiences', 'projects', 'services', 'contact', 'socials'
     ));
 });

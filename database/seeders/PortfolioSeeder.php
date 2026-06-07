@@ -8,6 +8,7 @@ use App\Models\About;
 use App\Models\Skill;
 use App\Models\Experience;
 use App\Models\Project;
+use App\Models\Setting;
 use App\Models\Service;
 use App\Models\ContactInfo;
 use App\Models\Social;
@@ -16,6 +17,8 @@ class PortfolioSeeder extends Seeder
 {
     public function run(): void
     {
+        Setting::updateOrCreate(['key' => 'maintenance_mode'], ['value' => '0']);
+
         Hero::updateOrCreate(['id' => 1], [
             'name'       => 'Your Name',
             'title'      => 'Full Stack Developer',
