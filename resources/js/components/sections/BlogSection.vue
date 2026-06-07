@@ -35,8 +35,9 @@
                 </div>
             </template>
 
-            <p v-else class="text-center text-gray-500 text-sm" style="font-family: 'Poppins', sans-serif;">
-                No blog posts yet.
+            <p v-else class="text-center text-gray-500 text-sm max-w-md mx-auto" style="font-family: 'Poppins', sans-serif;">
+                No blog posts to show. Open the CMS → <strong class="text-gray-400">Blog Posts</strong> → click
+                <strong class="text-gray-400">Sync from Hashnode</strong>, then toggle which posts are visible.
             </p>
         </div>
     </section>

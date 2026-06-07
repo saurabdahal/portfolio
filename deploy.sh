@@ -30,6 +30,7 @@ npm run build
 
 echo "[5/6] Running database migrations..."
 php artisan migrate --force
+php artisan db:seed --class=BlogPostSeeder --force
 
 echo "[6/6] Caching config, routes and views..."
 php artisan config:cache

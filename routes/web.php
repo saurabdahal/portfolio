@@ -11,7 +11,7 @@ use App\Models\Service;
 use App\Models\ContactInfo;
 use App\Models\Social;
 use App\Models\Setting;
-use App\Services\HashnodeService;
+use App\Services\PortfolioBlogService;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,8 +21,9 @@ Route::get('/blogs/{slug?}', function () {
     return view('welcome');
 })->where('slug', '.*');
 
-Route::get('/api/portfolio', function () {
+Route::get('/api/portfolio', function (PortfolioBlogService $blog) {
     $maintenance_mode = Setting::get('maintenance_mode', '0') === '1';
+    $blog_visible = $blog->hasVisiblePosts();
 
     $hero        = Hero::where('is_visible', true)->first();
     $about       = About::where('is_visible', true)->first();
@@ -35,6 +36,7 @@ Route::get('/api/portfolio', function () {
 
     return response()->json(compact(
         'maintenance_mode',
+        'blog_visible',
         'hero', 'about', 'skills', 'experiences', 'projects', 'services', 'contact', 'socials'
     ));
 });
@@ -60,10 +62,10 @@ Route::get('/api/hashnode/feed', function () {
     }
 });
 
-Route::get('/api/hashnode/posts', function (Request $request, HashnodeService $hashnode) {
+Route::get('/api/hashnode/posts', function (Request $request, PortfolioBlogService $blog) {
     try {
         $first = min((int) $request->query('first', 12), 50);
-        $posts = $hashnode->getPosts($first);
+        $posts = $blog->getVisiblePosts($first);
 
         return response()->json(['posts' => $posts]);
     } catch (\Throwable $e) {
@@ -71,9 +73,9 @@ Route::get('/api/hashnode/posts', function (Request $request, HashnodeService $h
     }
 });
 
-Route::get('/api/hashnode/posts/{slug}', function (string $slug, HashnodeService $hashnode) {
+Route::get('/api/hashnode/posts/{slug}', function (string $slug, PortfolioBlogService $blog) {
     try {
-        $post = $hashnode->getPost($slug);
+        $post = $blog->getVisiblePost($slug);
         if (! $post) {
             return response()->json(['message' => 'Post not found'], 404);
         }

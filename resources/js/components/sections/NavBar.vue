@@ -53,17 +53,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
-defineProps({
+const props = defineProps({
     initials: { type: String, default: 'Portfolio' },
     activeSection: { type: String, default: 'home' },
+    showBlog: { type: Boolean, default: true },
 });
 
 const isSticky = ref(false);
 const menuOpen = ref(false);
 
-const navItems = [
+const allNavItems = [
     { id: 'home', label: 'Home', href: '#home' },
     { id: 'about', label: 'About', href: '#about' },
     { id: 'experience', label: 'Experience', href: '#experience' },
@@ -72,6 +73,10 @@ const navItems = [
     { id: 'blog', label: 'Blog', href: '#blog' },
     { id: 'contact', label: 'Contact', href: '#contact' },
 ];
+
+const navItems = computed(() =>
+    props.showBlog ? allNavItems : allNavItems.filter((item) => item.id !== 'blog')
+);
 
 function navigate(id) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });

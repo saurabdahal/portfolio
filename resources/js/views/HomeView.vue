@@ -1,6 +1,6 @@
 <template>
     <div>
-        <NavBar :initials="heroData.name || 'Portfolio'" :active-section="activeSection" />
+        <NavBar :initials="heroData.name || 'Portfolio'" :active-section="activeSection" :show-blog="blogVisible" />
         <Hero
             :name="heroData.name"
             :title="heroData.title"
@@ -19,7 +19,7 @@
             :projects="projects.map(p => ({ ...p, image: p.image ? '/storage/' + p.image : '' }))"
         />
         <Services v-if="services.length" :services="services" />
-        <BlogSection />
+        <BlogSection v-if="blogVisible" />
         <Contact
             :email="contactData.email"
             :phone="contactData.phone"
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import NavBar from '../components/sections/NavBar.vue';
@@ -53,8 +53,14 @@ const services = ref([]);
 const contactData = ref({});
 const socials = ref([]);
 const activeSection = ref('home');
+const blogVisible = ref(true);
 
-const sections = ['home', 'about', 'experience', 'portfolio', 'services', 'blog', 'contact'];
+const sections = computed(() => {
+    const list = ['home', 'about', 'experience', 'portfolio', 'services'];
+    if (blogVisible.value) list.push('blog');
+    list.push('contact');
+    return list;
+});
 
 onMounted(async () => {
     try {
@@ -67,6 +73,7 @@ onMounted(async () => {
         services.value = data.services ?? [];
         contactData.value = data.contact ?? {};
         socials.value = data.socials ?? [];
+        blogVisible.value = data.blog_visible ?? true;
     } catch (e) {
         console.error('Failed to load portfolio data', e);
     }
@@ -87,10 +94,10 @@ function scrollToSection(id) {
 
 function updateActiveSection() {
     const scrollY = window.scrollY + 100;
-    for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
+    for (let i = sections.value.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections.value[i]);
         if (el && el.offsetTop <= scrollY) {
-            activeSection.value = sections[i];
+            activeSection.value = sections.value[i];
             break;
         }
     }

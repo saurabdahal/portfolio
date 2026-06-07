@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import axios from 'axios';
 import HomeView from '../views/HomeView.vue';
 import BlogView from '../views/BlogView.vue';
 
@@ -15,6 +16,23 @@ const router = createRouter({
         }
         return { top: 0 };
     },
+});
+
+router.beforeEach(async (to) => {
+    if (!to.path.startsWith('/blogs')) {
+        return true;
+    }
+
+    try {
+        const { data } = await axios.get('/api/portfolio');
+        if (!data.blog_visible) {
+            return { path: '/' };
+        }
+    } catch {
+        return { path: '/' };
+    }
+
+    return true;
 });
 
 export default router;
