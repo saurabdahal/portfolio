@@ -1,18 +1,18 @@
 <template>
-    <section id="services" class="py-24 bg-white">
+    <section id="services" class="py-24 bg-[#111111]">
         <div class="max-w-6xl mx-auto px-6">
             <SectionTitle title="Services" subtitle="What I can do for you" />
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div
                     v-for="service in services"
                     :key="service.title"
-                    class="text-center p-8 border border-[#e8e8e8] hover:shadow-md transition-shadow duration-300 group"
+                    class="text-center p-8 border border-[#333333] bg-[#1a1a1a] hover:border-[#c9a84c]/50 transition-colors duration-300 group"
                 >
-                    <div class="w-14 h-14 mx-auto mb-6 flex items-center justify-center text-[#484848] group-hover:scale-110 transition-transform duration-300" v-html="service.icon"></div>
-                    <h3 class="text-sm font-semibold uppercase tracking-wider text-[#484848] mb-3" style="font-family: 'Montserrat', sans-serif;">
+                    <div class="w-14 h-14 mx-auto mb-6 flex items-center justify-center text-[#c9a84c] group-hover:scale-110 transition-transform duration-300" v-html="service.icon"></div>
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-white mb-3" style="font-family: 'Montserrat', sans-serif;">
                         {{ service.title }}
                     </h3>
-                    <p class="text-sm text-[#767676] leading-relaxed" style="font-family: 'Poppins', sans-serif;">
+                    <p class="text-sm text-gray-400 leading-relaxed" style="font-family: 'Poppins', sans-serif;">
                         {{ service.description }}
                     </p>
                 </div>

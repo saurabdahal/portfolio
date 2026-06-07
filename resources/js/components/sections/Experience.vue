@@ -1,5 +1,5 @@
 <template>
-    <section id="experience" class="py-24 bg-white">
+    <section id="experience" class="py-24 bg-[#111111]">
         <div class="max-w-6xl mx-auto px-6">
             <SectionTitle title="Experience" />
             <div class="max-w-2xl mx-auto">
@@ -9,20 +9,20 @@
                     class="relative flex gap-6 pb-12 last:pb-0"
                 >
                     <div class="flex flex-col items-center">
-                        <div class="w-3 h-3 rounded-full bg-[#484848] border-2 border-white ring-2 ring-[#484848] mt-1.5 flex-shrink-0"></div>
-                        <div v-if="index < experiences.length - 1" class="flex-1 w-px border-l border-dashed border-[#bcbcbc] mt-2"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#c9a84c] border-2 border-[#111111] ring-2 ring-[#c9a84c] mt-1.5 flex-shrink-0"></div>
+                        <div v-if="index < experiences.length - 1" class="flex-1 w-px border-l border-dashed border-[#444444] mt-2"></div>
                     </div>
                     <div class="flex-1 pb-2">
-                        <span class="text-xs uppercase tracking-widest text-[#a1a1a1] mb-1 block" style="font-family: 'Montserrat', sans-serif;">
+                        <span class="text-xs uppercase tracking-widest text-[#c9a84c] mb-1 block" style="font-family: 'Montserrat', sans-serif;">
                             {{ item.year }}
                         </span>
-                        <h3 class="text-base font-semibold text-[#484848] mb-1" style="font-family: 'Montserrat', sans-serif;">
+                        <h3 class="text-base font-semibold text-white mb-1" style="font-family: 'Montserrat', sans-serif;">
                             {{ item.title }}
                         </h3>
-                        <p class="text-sm text-[#a1a1a1] mb-2 font-medium" style="font-family: 'Poppins', sans-serif;">
+                        <p class="text-sm text-gray-400 mb-2 font-medium" style="font-family: 'Poppins', sans-serif;">
                             {{ item.company }}
                         </p>
-                        <p class="text-sm text-[#767676] leading-relaxed" style="font-family: 'Poppins', sans-serif;">
+                        <p class="text-sm text-gray-500 leading-relaxed" style="font-family: 'Poppins', sans-serif;">
                             {{ item.description }}
                         </p>
                     </div>

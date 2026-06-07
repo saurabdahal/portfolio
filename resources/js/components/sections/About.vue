@@ -1,20 +1,20 @@
 <template>
-    <section id="about" class="py-24 bg-[#f5f5f5]">
+    <section id="about" class="py-24 bg-[#1a1a1a]">
         <div class="max-w-6xl mx-auto px-6">
             <SectionTitle title="About Me" />
             <div class="flex flex-col md:flex-row gap-16">
                 <div class="flex-1">
-                    <h3 class="text-lg font-semibold text-[#484848] mb-4" style="font-family: 'Montserrat', sans-serif;">
+                    <h3 class="text-lg font-semibold text-white mb-4" style="font-family: 'Montserrat', sans-serif;">
                         Who am I?
                     </h3>
-                    <p class="text-[#767676] leading-relaxed mb-6" style="font-family: 'Poppins', sans-serif;">
+                    <p class="text-gray-400 leading-relaxed mb-6" style="font-family: 'Poppins', sans-serif;">
                         {{ bio }}
                     </p>
                     <a
                         v-if="cvUrl"
                         :href="cvUrl"
                         download
-                        class="inline-block px-8 py-3 border border-[#393939] text-[#393939] text-xs uppercase tracking-widest hover:bg-[#393939] hover:text-white transition-colors duration-300"
+                        class="inline-block px-8 py-3 border border-[#c9a84c] text-[#c9a84c] text-xs uppercase tracking-widest hover:bg-[#c9a84c] hover:text-[#111111] transition-colors duration-300"
                         style="font-family: 'Montserrat', sans-serif;"
                     >
                         Download CV
@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="flex-1">
-                    <h3 class="text-lg font-semibold text-[#484848] mb-6" style="font-family: 'Montserrat', sans-serif;">
+                    <h3 class="text-lg font-semibold text-white mb-6" style="font-family: 'Montserrat', sans-serif;">
                         My Skills
                     </h3>
                     <SkillBar

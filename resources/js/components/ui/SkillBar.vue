@@ -1,12 +1,12 @@
 <template>
     <div class="mb-6" ref="barRef">
         <div class="flex justify-between mb-2">
-            <span class="text-sm font-semibold uppercase tracking-wider text-[#484848]" style="font-family: 'Montserrat', sans-serif;">{{ name }}</span>
-            <span class="text-sm text-[#a1a1a1]">{{ percentage }}%</span>
+            <span class="text-sm font-semibold uppercase tracking-wider text-gray-200" style="font-family: 'Montserrat', sans-serif;">{{ name }}</span>
+            <span class="text-sm text-gray-500">{{ percentage }}%</span>
         </div>
-        <div class="h-1.5 bg-[#c8c8c8] rounded-full overflow-hidden">
+        <div class="h-1.5 bg-[#333333] rounded-full overflow-hidden">
             <div
-                class="h-full bg-[#484848] rounded-full transition-all duration-1000 ease-out"
+                class="h-full bg-[#c9a84c] rounded-full transition-all duration-1000 ease-out"
                 :style="{ width: animated ? percentage + '%' : '0%' }"
             ></div>
         </div>

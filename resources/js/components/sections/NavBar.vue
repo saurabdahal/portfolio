@@ -1,10 +1,10 @@
 <template>
     <nav
         class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-        :class="isSticky ? 'bg-white shadow-sm py-3' : 'bg-transparent py-5'"
+        :class="isSticky ? 'bg-[#111111]/95 backdrop-blur-sm shadow-lg shadow-black/20 py-3 border-b border-[#222222]' : 'bg-transparent py-5'"
     >
         <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
-            <a href="#home" @click.prevent="scrollTo('home')" class="text-lg font-bold uppercase tracking-widest text-[#484848]" style="font-family: 'Montserrat', sans-serif;">
+            <a href="#home" @click.prevent="scrollTo('home')" class="text-lg font-bold uppercase tracking-widest text-white" style="font-family: 'Montserrat', sans-serif;">
                 {{ initials }}
             </a>
 
@@ -13,8 +13,8 @@
                     <a
                         :href="'#' + item.id"
                         @click.prevent="scrollTo(item.id)"
-                        class="text-xs uppercase tracking-widest transition-colors duration-200 hover:text-[#484848]"
-                        :class="activeSection === item.id ? 'text-[#484848] font-semibold' : 'text-[#a1a1a1]'"
+                        class="text-xs uppercase tracking-widest transition-colors duration-200 hover:text-[#c9a84c]"
+                        :class="activeSection === item.id ? 'text-[#c9a84c] font-semibold' : 'text-gray-400'"
                         style="font-family: 'Montserrat', sans-serif;"
                     >
                         {{ item.label }}
@@ -22,7 +22,7 @@
                 </li>
             </ul>
 
-            <button @click="menuOpen = !menuOpen" class="md:hidden text-[#484848]">
+            <button @click="menuOpen = !menuOpen" class="md:hidden text-gray-300">
                 <svg v-if="!menuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
@@ -33,7 +33,7 @@
         </div>
 
         <div
-            class="md:hidden bg-white border-t border-[#e8e8e8] overflow-hidden transition-all duration-300"
+            class="md:hidden bg-[#1a1a1a] border-t border-[#333333] overflow-hidden transition-all duration-300"
             :class="menuOpen ? 'max-h-96' : 'max-h-0'"
         >
             <ul class="px-6 py-4 flex flex-col gap-4">
@@ -41,7 +41,7 @@
                     <a
                         :href="'#' + item.id"
                         @click.prevent="scrollTo(item.id); menuOpen = false"
-                        class="text-xs uppercase tracking-widest text-[#767676] hover:text-[#484848] transition-colors duration-200"
+                        class="text-xs uppercase tracking-widest text-gray-400 hover:text-[#c9a84c] transition-colors duration-200"
                         style="font-family: 'Montserrat', sans-serif;"
                     >
                         {{ item.label }}

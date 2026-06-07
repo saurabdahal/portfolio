@@ -1,5 +1,5 @@
 <template>
-    <section id="portfolio" class="py-24 bg-[#f5f5f5]">
+    <section id="portfolio" class="py-24 bg-[#1a1a1a]">
         <div class="max-w-6xl mx-auto px-6">
             <SectionTitle title="My Work" subtitle="A selection of recent projects" />
 
@@ -10,8 +10,8 @@
                     @click="activeCategory = cat"
                     class="text-xs uppercase tracking-widest transition-colors duration-200 pb-1"
                     :class="activeCategory === cat
-                        ? 'text-[#484848] border-b border-[#484848]'
-                        : 'text-[#a1a1a1] hover:text-[#484848]'"
+                        ? 'text-[#c9a84c] border-b border-[#c9a84c]'
+                        : 'text-gray-500 hover:text-gray-300'"
                     style="font-family: 'Montserrat', sans-serif;"
                 >
                     {{ cat }}

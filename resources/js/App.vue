@@ -1,7 +1,7 @@
 <template>
     <div class="relative">
-        <div v-if="loading" class="min-h-screen flex items-center justify-center bg-white">
-            <div class="w-8 h-8 border-2 border-[#484848] border-t-transparent rounded-full animate-spin"></div>
+        <div v-if="loading" class="min-h-screen flex items-center justify-center bg-[#111111]">
+            <div class="w-8 h-8 border-2 border-[#c9a84c] border-t-transparent rounded-full animate-spin"></div>
         </div>
 
         <Maintenance v-else-if="maintenanceMode" :socials="socials" />
