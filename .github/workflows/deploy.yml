@@ -18,5 +18,4 @@ jobs:
           port: 22
           timeout: 60s
           command_timeout: 20m
-          debug: true
           script: bash /home/admin/deploy.sh ${{ github.ref_name }}
