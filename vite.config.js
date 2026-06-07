@@ -16,5 +16,11 @@ export default defineConfig({
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
+        proxy: {
+            '/api/hashnode/feed': {
+                target: 'http://127.0.0.1:8001',
+                changeOrigin: true,
+            },
+        },
     },
 });

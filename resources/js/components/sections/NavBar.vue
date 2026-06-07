@@ -4,15 +4,15 @@
         :class="isSticky ? 'bg-[#111111]/95 backdrop-blur-sm shadow-lg shadow-black/20 py-3 border-b border-[#222222]' : 'bg-transparent py-5'"
     >
         <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
-            <a href="#home" @click.prevent="scrollTo('home')" class="text-lg font-bold uppercase tracking-widest text-white" style="font-family: 'Montserrat', sans-serif;">
+            <a href="#home" @click.prevent="navigate('home')" class="text-lg font-bold uppercase tracking-widest text-white" style="font-family: 'Montserrat', sans-serif;">
                 {{ initials }}
             </a>
 
             <ul class="hidden md:flex items-center gap-8">
                 <li v-for="item in navItems" :key="item.id">
                     <a
-                        :href="'#' + item.id"
-                        @click.prevent="scrollTo(item.id)"
+                        :href="item.href"
+                        @click.prevent="navigate(item.id)"
                         class="text-xs uppercase tracking-widest transition-colors duration-200 hover:text-[#c9a84c]"
                         :class="activeSection === item.id ? 'text-[#c9a84c] font-semibold' : 'text-gray-400'"
                         style="font-family: 'Montserrat', sans-serif;"
@@ -39,8 +39,8 @@
             <ul class="px-6 py-4 flex flex-col gap-4">
                 <li v-for="item in navItems" :key="item.id">
                     <a
-                        :href="'#' + item.id"
-                        @click.prevent="scrollTo(item.id); menuOpen = false"
+                        :href="item.href"
+                        @click.prevent="navigate(item.id); menuOpen = false"
                         class="text-xs uppercase tracking-widest text-gray-400 hover:text-[#c9a84c] transition-colors duration-200"
                         style="font-family: 'Montserrat', sans-serif;"
                     >
@@ -64,15 +64,16 @@ const isSticky = ref(false);
 const menuOpen = ref(false);
 
 const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'experience', label: 'Experience' },
-    { id: 'portfolio', label: 'Work' },
-    { id: 'services', label: 'Services' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'home', label: 'Home', href: '#home' },
+    { id: 'about', label: 'About', href: '#about' },
+    { id: 'experience', label: 'Experience', href: '#experience' },
+    { id: 'portfolio', label: 'Work', href: '#portfolio' },
+    { id: 'services', label: 'Services', href: '#services' },
+    { id: 'blog', label: 'Blog', href: '#blog' },
+    { id: 'contact', label: 'Contact', href: '#contact' },
 ];
 
-function scrollTo(id) {
+function navigate(id) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 }
 

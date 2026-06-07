@@ -1,0 +1,38 @@
+[
+    {
+        "id": "uploading-files-in-s3-with-python",
+        "slug": "uploading-files-in-s3-with-python",
+        "title": "Uploading files in S3 with python",
+        "brief": "Learn how to upload files to Amazon S3 using Python and boto3, with practical examples for your data engineering workflows.",
+        "readTimeInMinutes": 5,
+        "publishedAt": "2025-07-05T00:00:00+00:00",
+        "url": "https://aws-python-labs.hashnode.dev/uploading-files-in-s3-with-python"
+    },
+    {
+        "id": "creating-free-aws-account-and-user",
+        "slug": "creating-free-aws-account-and-user",
+        "title": "Creating free AWS account and User",
+        "brief": "Step-by-step guide to setting up a free-tier AWS account and creating an IAM user for programmatic access.",
+        "readTimeInMinutes": 4,
+        "publishedAt": "2025-07-04T00:00:00+00:00",
+        "url": "https://aws-python-labs.hashnode.dev/creating-free-aws-account-and-user"
+    },
+    {
+        "id": "managing-s3-object-lifecycle-policy-with-python",
+        "slug": "managing-s3-object-lifecycle-policy-with-python",
+        "title": "Managing S3 object lifecycle policy with python",
+        "brief": "In our previous article we learned about uploading files in the bucket. In this article we will see how we can manage lifecycle of the items in the bucket using python.",
+        "readTimeInMinutes": 4,
+        "publishedAt": "2025-07-04T00:00:00+00:00",
+        "url": "https://aws-python-labs.hashnode.dev/managing-s3-object-lifecycle-policy-with-python"
+    },
+    {
+        "id": "no-nonsense-guide-to-automating-aws-s3-with-python-free-tier-friendly-part-1",
+        "slug": "no-nonsense-guide-to-automating-aws-s3-with-python-free-tier-friendly-part-1",
+        "title": "No nonsense guide to automating AWS S3 with Python (Free Tier-Friendly!) - Part 1",
+        "brief": "A practical, no-fluff introduction to automating AWS S3 tasks with Python while staying within the AWS Free Tier.",
+        "readTimeInMinutes": 2,
+        "publishedAt": "2025-07-04T00:00:00+00:00",
+        "url": "https://aws-python-labs.hashnode.dev/no-nonsense-guide-to-automating-aws-s3-with-python-free-tier-friendly-part-1"
+    }
+]

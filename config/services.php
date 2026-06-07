@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'hashnode' => [
+        'host' => env('HASHNODE_HOST', 'aws-python-labs.hashnode.dev'),
+        'endpoint' => env('HASHNODE_GQL_ENDPOINT', 'https://gql.hashnode.com/'),
+        'token' => env('HASHNODE_API_TOKEN'),
+    ],
+
 ];
