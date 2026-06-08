@@ -25,7 +25,7 @@
             <div class="writer-actions">
                 @if ($record)
                     <a
-                        href="{{ $record->publicUrl() }}"
+                        href="{{ $record->previewUrl() }}"
                         target="_blank"
                         rel="noopener"
                         class="writer-btn"

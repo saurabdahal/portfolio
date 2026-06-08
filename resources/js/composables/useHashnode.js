@@ -27,22 +27,25 @@ export async function fetchHashnodePosts(first = 12) {
     }
 }
 
-export async function fetchHashnodePost(slug) {
+export async function fetchHashnodePost(slug, previewToken = null) {
     let post = null;
 
-    try {
-        const data = await fetchGraphQL(postBySlugQuery({ host: HASHNODE_HOST, slug }));
-        post = data?.publication?.post ?? null;
-    } catch {
-        // fall through to portfolio API
+    if (! previewToken) {
+        try {
+            const data = await fetchGraphQL(postBySlugQuery({ host: HASHNODE_HOST, slug }));
+            post = data?.publication?.post ?? null;
+        } catch {
+            // fall through to portfolio API
+        }
+
+        if (post?.content?.html) {
+            return post;
+        }
     }
 
-    if (post?.content?.html) {
-        return post;
-    }
-
     try {
-        const { data } = await axios.get(`/api/hashnode/posts/${slug}`);
+        const params = previewToken ? { preview: previewToken } : {};
+        const { data } = await axios.get(`/api/hashnode/posts/${slug}`, { params });
         const apiPost = data.post ?? null;
 
         if (!apiPost) {

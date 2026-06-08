@@ -73,9 +73,9 @@ Route::get('/api/hashnode/posts', function (Request $request, PortfolioBlogServi
     }
 });
 
-Route::get('/api/hashnode/posts/{slug}', function (string $slug, PortfolioBlogService $blog) {
+Route::get('/api/hashnode/posts/{slug}', function (string $slug, Request $request, PortfolioBlogService $blog) {
     try {
-        $post = $blog->getVisiblePost($slug);
+        $post = $blog->getVisiblePost($slug, $request->query('preview'));
         if (! $post) {
             return response()->json(['message' => 'Post not found'], 404);
         }

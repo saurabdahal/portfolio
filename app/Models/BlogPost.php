@@ -77,6 +77,21 @@ class BlogPost extends Model
         return $this->url ?: url("/blogs/{$this->slug}");
     }
 
+    public function previewToken(): string
+    {
+        return hash_hmac('sha256', "blog-preview:{$this->id}", config('app.key'));
+    }
+
+    public function previewUrl(): string
+    {
+        return url("/blogs/{$this->slug}?preview={$this->previewToken()}");
+    }
+
+    public function matchesPreviewToken(?string $token): bool
+    {
+        return filled($token) && hash_equals($this->previewToken(), $token);
+    }
+
     public function toApiArray(): array
     {
         return [

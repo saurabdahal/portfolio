@@ -18,7 +18,9 @@ class EditBlogPost extends EditRecord
             Actions\Action::make('view')
                 ->label('View on site')
                 ->icon('heroicon-o-arrow-top-right-on-square')
-                ->url(fn (): string => $this->record->publicUrl())
+                ->url(fn (): string => $this->record->is_visible
+                    ? $this->record->publicUrl()
+                    : $this->record->previewUrl())
                 ->openUrlInNewTab(),
             Actions\DeleteAction::make(),
         ];

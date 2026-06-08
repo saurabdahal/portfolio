@@ -17,6 +17,14 @@
 
         <main class="pt-24 pb-16">
             <div class="max-w-4xl mx-auto px-6">
+                <div
+                    v-if="isPreview"
+                    class="mb-6 rounded border border-[#c9a84c]/40 bg-[#c9a84c]/10 px-4 py-3 text-center text-sm text-[#c9a84c]"
+                    style="font-family: 'Poppins', sans-serif;"
+                >
+                    Preview mode — this post is not published yet.
+                </div>
+
                 <div v-if="loading" class="flex justify-center py-24">
                     <div class="w-8 h-8 border-2 border-[#c9a84c] border-t-transparent rounded-full animate-spin"></div>
                 </div>
@@ -86,6 +94,8 @@ const loading = ref(true);
 const error = ref('');
 
 const slug = computed(() => route.params.slug || null);
+const previewToken = computed(() => route.query.preview || null);
+const isPreview = computed(() => Boolean(previewToken.value));
 
 const coverImage = computed(() => blogPost.value?.coverImage?.url ?? null);
 
@@ -120,7 +130,7 @@ async function loadSinglePost(postSlug) {
     loading.value = true;
     error.value = '';
     try {
-        const post = await fetchHashnodePost(postSlug);
+        const post = await fetchHashnodePost(postSlug, previewToken.value);
         if (post) {
             blogPost.value = post;
             window.scrollTo(0, 0);
@@ -135,8 +145,8 @@ async function loadSinglePost(postSlug) {
 }
 
 watch(
-    slug,
-    async (value) => {
+    () => [slug.value, previewToken.value],
+    async ([value]) => {
         if (value) await loadSinglePost(String(value));
         else await loadPostsList();
     },

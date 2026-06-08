@@ -36,15 +36,19 @@ class PortfolioBlogService
             ->all();
     }
 
-    public function getVisiblePost(string $slug): ?array
+    public function getVisiblePost(string $slug, ?string $previewToken = null): ?array
     {
         if (! BlogPost::exists()) {
             return $this->normalizePost($this->hashnode->getPost($slug));
         }
 
-        $record = BlogPost::where('slug', $slug)->where('is_visible', true)->first();
+        $record = BlogPost::where('slug', $slug)->first();
 
         if (! $record) {
+            return null;
+        }
+
+        if (! $record->is_visible && ! $record->matchesPreviewToken($previewToken)) {
             return null;
         }
 
