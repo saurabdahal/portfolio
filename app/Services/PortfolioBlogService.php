@@ -6,7 +6,11 @@ use App\Models\BlogPost;
 
 class PortfolioBlogService
 {
-    public function __construct(protected HashnodeService $hashnode) {}
+    public function __construct(
+        protected HashnodeService $hashnode,
+        protected HashnodePostContentService $content,
+        protected HashnodeLocalContentStore $localContent
+    ) {}
 
     public function hasVisiblePosts(): bool
     {
@@ -35,7 +39,7 @@ class PortfolioBlogService
     public function getVisiblePost(string $slug): ?array
     {
         if (! BlogPost::exists()) {
-            return $this->hashnode->getPost($slug);
+            return $this->normalizePost($this->hashnode->getPost($slug));
         }
 
         $record = BlogPost::where('slug', $slug)->where('is_visible', true)->first();
@@ -44,13 +48,50 @@ class PortfolioBlogService
             return null;
         }
 
-        $post = $this->hashnode->getPost($slug);
+        if (filled($record->content_html)) {
+            return $record->toDetailApiArray();
+        }
 
-        if ($post) {
+        $local = $this->localContent->getForSlug($slug);
+        if ($local && $this->content->hasUsableContent($local['content_html'] ?? null)) {
+            return $this->mergeContent($record->toDetailApiArray(), $local);
+        }
+
+        $post = $this->normalizePost($this->hashnode->getPost($slug));
+
+        if ($post && $this->content->hasUsableContent($post['content']['html'] ?? null)) {
             return array_merge($post, ['url' => $record->url]);
         }
 
-        return $record->toApiArray();
+        return $record->toDetailApiArray();
+    }
+
+    protected function mergeContent(array $post, array $content): array
+    {
+        $post['content'] = ['html' => $content['content_html']];
+
+        if (! empty($content['cover_image_url'])) {
+            $post['coverImage'] = ['url' => $content['cover_image_url']];
+        }
+
+        return $post;
+    }
+
+    protected function normalizePost(?array $post): ?array
+    {
+        if (! $post) {
+            return null;
+        }
+
+        $html = $post['content']['html'] ?? null;
+
+        if ($this->content->hasUsableContent($html)) {
+            return $post;
+        }
+
+        unset($post['content']);
+
+        return $post;
     }
 
     protected function mapHashnodePosts(array $posts): array

@@ -9,15 +9,13 @@
 
             <div v-else-if="error" class="text-center py-8">
                 <p class="text-gray-400 text-sm mb-4" style="font-family: 'Poppins', sans-serif;">{{ error }}</p>
-                <a
-                    :href="blogUrl"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <router-link
+                    to="/blogs"
                     class="inline-block px-8 py-3 border border-[#c9a84c] text-[#c9a84c] text-xs uppercase tracking-widest hover:bg-[#c9a84c] hover:text-[#111111] transition-colors duration-300"
                     style="font-family: 'Montserrat', sans-serif;"
                 >
-                    Read on Hashnode →
-                </a>
+                    View All Posts
+                </router-link>
             </div>
 
             <template v-else-if="posts.length">
@@ -38,9 +36,8 @@
                 </div>
             </template>
 
-            <p v-else class="text-center text-gray-500 text-sm max-w-md mx-auto" style="font-family: 'Poppins', sans-serif;">
-                No blog posts to show. Open the CMS → <strong class="text-gray-400">Blog Posts</strong> → click
-                <strong class="text-gray-400">Sync from Hashnode</strong>, then toggle which posts are visible.
+            <p v-else class="text-center text-gray-500 text-sm" style="font-family: 'Poppins', sans-serif;">
+                No posts found.
             </p>
         </div>
     </section>
@@ -51,12 +48,10 @@ import { ref, onMounted } from 'vue';
 import SectionTitle from '../ui/SectionTitle.vue';
 import BlogCard from '../ui/BlogCard.vue';
 import { fetchHashnodePosts } from '../../composables/useHashnode';
-import { HASHNODE_BLOG_URL } from '../../config/hashnode';
 
 const posts = ref([]);
 const loading = ref(true);
 const error = ref('');
-const blogUrl = HASHNODE_BLOG_URL;
 
 onMounted(async () => {
     try {

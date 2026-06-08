@@ -85,6 +85,76 @@ Route::get('/api/hashnode/posts/{slug}', function (string $slug, PortfolioBlogSe
     }
 });
 
+Route::post('/api/hashnode/graphql', function (Request $request) {
+    $host = config('services.hashnode.host');
+    $token = config('services.hashnode.token');
+    $payload = $request->only(['query', 'variables', 'operationName']);
+
+    $endpoints = array_unique([
+        config('services.hashnode.endpoint', 'https://gql.hashnode.com/'),
+        "https://{$host}/api/graphql",
+    ]);
+
+    foreach ($endpoints as $endpoint) {
+        $headers = [
+            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Origin' => "https://{$host}",
+            'Referer' => "https://{$host}/",
+        ];
+
+        if ($token) {
+            $headers['Authorization'] = $token;
+        }
+
+        $response = \Illuminate\Support\Facades\Http::timeout(25)
+            ->withHeaders($headers)
+            ->post($endpoint, $payload);
+
+        if ($response->failed()) {
+            continue;
+        }
+
+        $body = $response->body();
+        if (str_starts_with(ltrim($body), '<!DOCTYPE') || str_starts_with(ltrim($body), '<html')) {
+            continue;
+        }
+
+        $json = $response->json();
+        if (is_array($json) && (isset($json['data']) || isset($json['errors']))) {
+            return response()->json($json);
+        }
+    }
+
+    return response()->json(['message' => 'Could not load article content'], 502);
+});
+
+Route::post('/api/hashnode/posts/{slug}/content', function (string $slug, Request $request) {
+    $validated = $request->validate([
+        'content_html' => 'required|string',
+        'cover_image_url' => 'nullable|string|max:2048',
+    ]);
+
+    $post = \App\Models\BlogPost::where('slug', $slug)->first();
+    if (! $post) {
+        return response()->json(['message' => 'Post not found'], 404);
+    }
+
+    $post->update([
+        'content_html' => $validated['content_html'],
+        'cover_image_url' => $validated['cover_image_url'] ?? $post->cover_image_url,
+    ]);
+
+    app(\App\Services\HashnodeLocalContentStore::class)->saveForSlug(
+        $slug,
+        $validated['content_html'],
+        $validated['cover_image_url'] ?? $post->cover_image_url
+    );
+
+    return response()->json(['message' => 'Content cached']);
+});
+
 Route::post('/contact', function (Request $request) {
     $validated = $request->validate([
         'name'    => 'required|string|max:255',

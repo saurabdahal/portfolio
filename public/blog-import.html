@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Import blog articles</title>
+<style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: #0d0d0d;
+        color: #e5e5e5;
+        line-height: 1.6;
+        padding: 48px 20px;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: 1.6rem; margin: 0 0 6px; }
+    p.sub { color: #9ca3af; margin: 0 0 32px; }
+    .card {
+        background: #161616;
+        border: 1px solid #2a2a2a;
+        border-radius: 14px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+    label { display: block; font-size: 0.8rem; color: #9ca3af; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+    input {
+        width: 100%;
+        padding: 10px 12px;
+        background: #0d0d0d;
+        border: 1px solid #333;
+        border-radius: 8px;
+        color: #e5e5e5;
+        font-size: 0.95rem;
+    }
+    .bm {
+        display: inline-block;
+        margin-top: 18px;
+        padding: 12px 22px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 10px;
+        cursor: grab;
+    }
+    ol { padding-left: 20px; }
+    ol li { margin-bottom: 12px; }
+    code { background: #222; padding: 2px 6px; border-radius: 5px; font-size: 0.85em; }
+    .posts a { color: #a5b4fc; display: block; padding: 6px 0; text-decoration: none; }
+    .posts a:hover { text-decoration: underline; }
+    .hint { font-size: 0.85rem; color: #6b7280; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Import your blog articles</h1>
+    <p class="sub">Hashnode now charges for API access, so articles are imported once into your own site and served from there. This runs in your browser, where Hashnode loads normally.</p>
+
+    <div class="card">
+        <label for="target">Upload target (auto-detected)</label>
+        <input id="target" type="text" />
+        <p class="hint">This is the site the articles get saved to. Keep it as-is unless you know what you're doing.</p>
+        <a class="bm" id="bm" href="#">Save article to my site</a>
+        <p class="hint">Drag this button onto your bookmarks bar.</p>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0">How to use</h3>
+        <ol>
+            <li>Drag the <strong>Save article to my site</strong> button above into your browser's bookmarks bar.</li>
+            <li>Open one of your Hashnode articles below (each opens in a new tab).</li>
+            <li>On the article page, click the bookmark you just added.</li>
+            <li>You'll see a confirmation. Repeat for each article. Done — refresh your blog.</li>
+        </ol>
+        <div class="posts" id="posts"></div>
+    </div>
+</div>
+
+<script>
+    var HASHNODE_HOST = "aws-python-labs.hashnode.dev";
+    var SLUGS = [
+        "no-nonsense-guide-to-automating-aws-s3-with-python-free-tier-friendly-part-1",
+        "uploading-files-in-s3-with-python",
+        "managing-s3-object-lifecycle-policy-with-python",
+        "creating-free-aws-account-and-user"
+    ];
+
+    var targetInput = document.getElementById("target");
+    targetInput.value = window.location.origin;
+
+    function buildBookmarklet(target) {
+        var code = "(function(){" +
+            "var T=" + JSON.stringify(target) + ";" +
+            "function f(o,d){if(!o||d>10||typeof o!=='object')return null;" +
+            "if(o.content&&typeof o.content.html==='string'&&o.content.html.length>0&&typeof o.slug==='string')return o;" +
+            "for(var k in o){if(Object.prototype.hasOwnProperty.call(o,k)){var r=f(o[k],d+1);if(r)return r;}}return null;}" +
+            "var d=window.__NEXT_DATA__;if(!d){alert('No Hashnode article data found on this page.');return;}" +
+            "var p=f(d,0);if(!p){alert('Could not locate article content here. Open a published article page.');return;}" +
+            "var s=p.slug||location.pathname.replace(/^\\//,'').split('/').pop();" +
+            "var c=(p.coverImage&&(p.coverImage.url||p.coverImage))||null;" +
+            "fetch(T+'/api/hashnode/posts/'+s+'/content',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'}," +
+            "body:JSON.stringify({content_html:p.content.html,cover_image_url:c})})" +
+            ".then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})" +
+            ".then(function(x){alert(x.ok?('Imported \"'+(p.title||s)+'\" \\u2713'):('Import failed: '+((x.j&&x.j.message)||'error')));})" +
+            ".catch(function(e){alert('Import error: '+e.message);});" +
+            "})();";
+        return "javascript:" + encodeURIComponent(code);
+    }
+
+    var bm = document.getElementById("bm");
+    function refresh() {
+        bm.href = buildBookmarklet(targetInput.value.replace(/\/$/, ""));
+    }
+    targetInput.addEventListener("input", refresh);
+    refresh();
+
+    var postsEl = document.getElementById("posts");
+    SLUGS.forEach(function (slug) {
+        var a = document.createElement("a");
+        a.href = "https://" + HASHNODE_HOST + "/" + slug;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = "→ " + slug;
+        postsEl.appendChild(a);
+    });
+</script>
+</body>
+</html>

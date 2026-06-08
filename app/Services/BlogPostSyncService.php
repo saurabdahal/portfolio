@@ -7,7 +7,10 @@ use Carbon\Carbon;
 
 class BlogPostSyncService
 {
-    public function __construct(protected HashnodeService $hashnode) {}
+    public function __construct(
+        protected HashnodeService $hashnode,
+        protected HashnodePostContentService $content
+    ) {}
 
     public function sync(): int
     {
@@ -32,6 +35,14 @@ class BlogPostSyncService
 
             if (! $record->exists) {
                 $record->is_visible = true;
+            }
+
+            if (! $this->content->hasUsableContent($record->content_html)) {
+                $fetched = $this->content->fetchForSlug($slug, $record->url);
+                if ($fetched) {
+                    $record->content_html = $fetched['content_html'];
+                    $record->cover_image_url = $fetched['cover_image_url'];
+                }
             }
 
             $record->save();

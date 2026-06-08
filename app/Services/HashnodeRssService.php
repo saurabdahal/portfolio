@@ -43,20 +43,18 @@ class HashnodeRssService
     {
         return Cache::remember("hashnode.rss.{$this->host}", 900, function () {
             $url = "https://{$this->host}/rss.xml";
+            $body = $this->fetchRssBody($url);
 
-            $response = Http::timeout(20)
-                ->withHeaders([
-                    'User-Agent' => 'Mozilla/5.0 (compatible; PortfolioBot/1.0; +https://saurabdahal.com.np)',
-                    'Accept' => 'application/rss+xml, application/xml, text/xml, */*',
-                ])
-                ->get($url);
+            if ($body === null) {
+                $proxy = 'https://api.allorigins.win/raw?url='.urlencode($url);
+                $body = $this->fetchRssBody($proxy);
+            }
 
-            if ($response->failed() || str_contains($response->body(), 'Just a moment')) {
-                Log::warning('Hashnode RSS fetch failed', ['status' => $response->status()]);
+            if ($body === null) {
                 throw new \RuntimeException('Could not fetch Hashnode RSS feed.');
             }
 
-            $xml = @simplexml_load_string($response->body(), 'SimpleXMLElement', LIBXML_NOCDATA);
+            $xml = @simplexml_load_string($body, 'SimpleXMLElement', LIBXML_NOCDATA);
 
             if ($xml === false || ! isset($xml->channel->item)) {
                 throw new \RuntimeException('Invalid Hashnode RSS feed.');
@@ -64,6 +62,30 @@ class HashnodeRssService
 
             return iterator_to_array($xml->channel->item, false);
         });
+    }
+
+    protected function fetchRssBody(string $url): ?string
+    {
+        $response = Http::timeout(30)
+            ->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept' => 'application/rss+xml, application/xml, text/xml, */*',
+            ])
+            ->get($url);
+
+        if ($response->failed()) {
+            Log::warning('Hashnode RSS fetch failed', ['url' => $url, 'status' => $response->status()]);
+
+            return null;
+        }
+
+        $body = $response->body();
+
+        if (str_contains($body, 'Just a moment') || ! str_contains($body, '<rss')) {
+            return null;
+        }
+
+        return $body;
     }
 
     protected function normalizeListItem(\SimpleXMLElement $item): array

@@ -23,12 +23,13 @@ class HashnodeCacheService
     {
         foreach ($this->getPosts(50) as $post) {
             if (($post['slug'] ?? '') === $slug) {
-                return $post + [
-                    'content' => [
-                        'html' => '<p>' . e($post['brief'] ?? '') . '</p>'
-                            . '<p><a href="' . e($post['url'] ?? '') . '" target="_blank" rel="noopener noreferrer">Read the full article on Hashnode →</a></p>',
-                    ],
-                ];
+                $record = \App\Models\BlogPost::where('slug', $slug)->first();
+
+                if ($record && app(HashnodePostContentService::class)->hasUsableContent($record->content_html)) {
+                    return $record->toDetailApiArray();
+                }
+
+                return $post;
             }
         }
 

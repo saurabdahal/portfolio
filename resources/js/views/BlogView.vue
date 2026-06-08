@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen bg-[#111111]">
         <nav class="fixed top-0 left-0 right-0 z-50 bg-[#111111]/95 backdrop-blur-sm border-b border-[#222222] py-4">
-            <div class="max-w-4xl mx-auto px-6 flex items-center justify-between">
+            <div class="max-w-4xl mx-auto px-6">
                 <router-link
                     :to="slug ? '/blogs' : '/'"
                     class="text-xs uppercase tracking-widest text-gray-400 hover:text-[#c9a84c] transition-colors flex items-center gap-2"
@@ -12,15 +12,6 @@
                     </svg>
                     {{ slug ? 'All Posts' : 'Back to Portfolio' }}
                 </router-link>
-                <a
-                    :href="blogUrl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-xs uppercase tracking-widest text-gray-500 hover:text-[#c9a84c] transition-colors"
-                    style="font-family: 'Montserrat', sans-serif;"
-                >
-                    Hashnode ↗
-                </a>
             </div>
         </nav>
 
@@ -32,15 +23,13 @@
 
                 <div v-else-if="error" class="text-center py-24">
                     <p class="text-gray-400 mb-6" style="font-family: 'Poppins', sans-serif;">{{ error }}</p>
-                    <a
-                        :href="blogUrl"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <router-link
+                        :to="slug ? '/blogs' : '/'"
                         class="inline-block px-8 py-3 bg-[#c9a84c] text-[#111111] text-xs uppercase tracking-widest hover:bg-[#b8943f] transition-colors font-semibold"
                         style="font-family: 'Montserrat', sans-serif;"
                     >
-                        Read on Hashnode
-                    </a>
+                        {{ slug ? 'Back to All Posts' : 'Back to Portfolio' }}
+                    </router-link>
                 </div>
 
                 <div v-else-if="!slug">
@@ -68,7 +57,14 @@
                             {{ formatDate(blogPost.publishedAt) }} · {{ blogPost.readTimeInMinutes }} min read
                         </p>
                     </header>
-                    <div class="blog-content" v-html="renderedContent"></div>
+                    <div class="blog-content" v-if="renderedContent" v-html="renderedContent"></div>
+                    <div
+                        v-else-if="blogPost.brief"
+                        class="blog-content text-gray-300 leading-relaxed"
+                        style="font-family: 'Poppins', sans-serif;"
+                    >
+                        <p>{{ blogPost.brief }}</p>
+                    </div>
                 </article>
             </div>
         </main>
@@ -82,14 +78,12 @@ import SectionTitle from '../components/ui/SectionTitle.vue';
 import BlogCard from '../components/ui/BlogCard.vue';
 import { fetchHashnodePosts, fetchHashnodePost } from '../composables/useHashnode';
 import { cleanHashnodeHtml } from '../composables/cleanHashnodeHtml';
-import { HASHNODE_BLOG_URL } from '../config/hashnode';
 
 const route = useRoute();
 const posts = ref([]);
 const blogPost = ref({});
 const loading = ref(true);
 const error = ref('');
-const blogUrl = HASHNODE_BLOG_URL;
 
 const slug = computed(() => route.params.slug || null);
 
@@ -134,7 +128,7 @@ async function loadSinglePost(postSlug) {
             error.value = 'Post not found';
         }
     } catch (e) {
-        error.value = e?.response?.data?.message || e?.message || 'Error loading post';
+        error.value = e?.response?.data?.message || e?.message || 'Unable to load this post';
     } finally {
         loading.value = false;
     }

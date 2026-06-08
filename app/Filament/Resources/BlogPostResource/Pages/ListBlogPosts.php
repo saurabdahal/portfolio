@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\BlogPostResource\Pages;
 
+use App\Filament\Pages\WriteBlogPost;
 use App\Filament\Resources\BlogPostResource;
 use App\Services\BlogPostSyncService;
 use Filament\Actions;
@@ -15,6 +16,10 @@ class ListBlogPosts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('write')
+                ->label('Write a post')
+                ->icon('heroicon-o-pencil-square')
+                ->url(fn (): string => WriteBlogPost::getUrl()),
             Actions\Action::make('sync')
                 ->label('Sync from Hashnode')
                 ->icon('heroicon-o-arrow-path')
